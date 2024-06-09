@@ -59,6 +59,11 @@ jobs:
                         let issueOwner = issueUrl.split('/')[3];
                         let issueRepo = issueUrl.split('/')[4];
 
+                        console.log(issueUrl);
+                        console.log(issueNumber);
+                        console.log(issueOwner);
+                        console.log(issueRepo);
+
                         const { data: issueData } = await github.issues.get({
                           issue_number: issueNumber,
                           owner: issueOwner,
