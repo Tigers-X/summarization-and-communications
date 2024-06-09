@@ -1,5 +1,5 @@
 name: sum+inter workflow
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: Summarizer and Interactor in GitHub Actions 🚀
 on: [issue_comment]
 jobs:
     issue_commented:
@@ -23,53 +23,84 @@ jobs:
                     const commentBody = context.payload.comment.body;
                     const prefix = 'TriagerX';
                     if (commentBody.startsWith(prefix)) {
-                        const restCommentBody = commentBody.slice(prefix.length);
-                        if (restCommentBody.trim().startsWith('https')){
-                            const issueUrl = restCommentBody.trim();
-                            const issueNumber = issueUrl.split('/').pop();
-                            const issueOwner = issueUrl.split('/')[3];
-                            const issueRepo = issueUrl.split('/')[4];
+                        let restCommentBody = commentBody.replace(prefix, '').trim();
+                        let action = ''
+                        let model = ''
 
-                            const { data: issueData } = await github.issues.get({
-                                issue_number: issueNumber,
-                                owner: issueOwner,
-                                repo: issueRepo
-                            });
-
-                            const jsonData = JSON.stringify(issueData);
-                            console.log("issueData: -> ", jsonData);
-
-                            const apiUrl = 'https://gentle-grass-3c76678a9e5b4c789f59671655de411f.azurewebsites.net/';
-                            
-                            const response = await axios.post(apiUrl, jsonData, {
-                              headers: {
-                                'Content-Type': 'application/json'
-                              }
-                            });
-                        
-                            let newCommentBody = 'Title: ' + response.data['title'] + '\n';
-                            newCommentBody += 'Body: ' + response.data['body'] + '\n' 
-                            newCommentBody += 'Prediction: ' + response.data['prediction'] + '\n';
-                            
-                            console.log('response:', response); // Debug log
-                            console.log('response.data:', response.data); // Debug log
-                            console.log('newCommentBody: ', newCommentBody)
-                            
-                            await github.issues.createComment({
-                              issue_number: context.issue.number,
-                              owner: context.repo.owner,
-                              repo: context.repo.repo,
-                              body: newCommentBody
-                            });
-                        } else{
-                            const newCommentBody = 'Hi' + restCommentBody;
-                            github.issues.createComment({
-                                issue_number: context.issue.number,
-                                owner: context.repo.owner,
-                                repo: context.repo.repo,
-                                body: newCommentBody
-                            });
+                        if (commentBody.includes('/summarize')){
+                          restCommentBody = restCommentBody.replace('/summarize', '').trim();
+                          action = 'summarize'
+                        } else if (commentBody.includes('/interact')){
+                          restCommentBody = restCommentBody.replace('/interact', '').trim();
+                          action = 'interact'
                         }
+
+                        if (commentBody.includes('-chatgpt')){
+                          restCommentBody = restCommentBody.replace('-chatgpt', '').trim();
+                          model = 'chatgpt'
+                        } else if (commentBody.includes('-gemini')){
+                          restCommentBody = restCommentBody.replace('-gemini', '').trim();
+                          model = 'gemini'
+                        }
+                        
+                        input = {
+                          "issueData": {},
+                          "commentsData" : [],
+                          "model" : model,
+                          "action" : action,
+                          "userComment" : restCommentBody
+                        }
+
+                        let issueUrl = "";
+                        let issueNumber = "";
+                        let issueOwner = "";
+                        let issueRepo = "";
+
+                        if (commentBody.includes('https')) {
+                          // this is for summarization     example: TriagerX /summarize -chatgpt https://github.com/eclipse-openj9/openj9/issues/19576
+                          issueUrl = restCommentBody.trim();
+                          issueNumber = issueUrl.split('/').pop();
+                          issueOwner = issueUrl.split('/')[3];
+                          issueRepo = issueUrl.split('/')[4];
+                        } else {
+                          // this is for interaction       example: TriagerX /interact -gemini How are you?
+                          issueUrl = context.event.issue;
+                          issueNumber = context.issue.number;
+                          issueOwner = context.repo.owner;
+                          issueRepo = context.repo.repo;
+                        }
+
+                        const { data: issueData } = await github.issues.get({
+                          issue_number: issueNumber,
+                          owner: issueOwner,
+                          repo: issueRepo
+                        });
+
+                        input['issueData'] = issueData;
+
+                        if (action == 'interact') {
+                          const commentsUrl = issueData.comments_url;
+                          const { data: commentsData } = await github.request(commentsUrl);
+                          input['commentsData'] = commentsData;
+                        }
+
+                        const apiUrl = 'https://our-api-url';
+                        const response = await axios.post(apiUrl, JSON.stringify(input), {
+                          headers: {
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        
+                        let newCommentBody = response.data['response'];
+                        console.log('newCommentBody: ', newCommentBody)
+                        
+                        await github.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: newCommentBody
+                        });
+                      }
                     }
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
