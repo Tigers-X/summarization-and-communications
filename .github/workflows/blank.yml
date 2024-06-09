@@ -80,35 +80,8 @@ jobs:
                         }
 
                         input = {
-                            "issueData": {
-                                "title": "",
-                                "body": "",
-                                "state": "open",
-                                "assignees": [
-                                    {
-                                        "login": "abc"
-                                    }
-                                ],
-                                "labels": [
-                                    {
-                                        "name": ""
-                                    }
-                                ]
-                            },
-                            "commentsData": [
-                                {
-                                    "user": {
-                                        "login": "abc"
-                                    },
-                                    "body": "Hello this is sample text."
-                                },
-                                {
-                                    "user": {
-                                        "login": "bca"
-                                    },
-                                    "body": "test text"
-                                }
-                            ],
+                            "issueData": issueData,
+                            "commentsData": commentsData,
                             "action": "interact",
                             "model": "gemini",
                             "userComment": "Hello how are you?"
