@@ -74,9 +74,9 @@ jobs:
                           const commentsUrl = issueData.comments_url;
                           const { data: commentsData } = await github.request(commentsUrl);
                           input['commentsData'] = commentsData;
-                          console.log("COMMENTSDATA:", commentsData)
                         }
 
+                        console.log("INPUT____", input)
                         const response = await axios.post(apiUrl, JSON.stringify(input), {
                           headers: {
                             'Content-Type': 'application/json'
