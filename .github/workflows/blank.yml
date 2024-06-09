@@ -89,7 +89,6 @@ jobs:
                           repo: context.repo.repo,
                           body: newCommentBody
                         });
-                      }
                     }
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
