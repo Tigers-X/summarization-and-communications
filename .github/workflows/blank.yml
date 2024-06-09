@@ -84,9 +84,9 @@ jobs:
                                 "labels": []
                             },
                             "commentsData": [],
-                            "action": "summarize",
-                            "model": "gemini",
-                            "userComment": "How are you?"
+                            "model": model,
+                            "action": action,
+                            "userComment":restCommentBody
                         }
 
                         const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
