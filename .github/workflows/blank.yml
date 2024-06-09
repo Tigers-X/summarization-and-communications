@@ -1,0 +1,75 @@
+name: sum+inter workflow
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [issue_comment]
+jobs:
+    issue_commented:
+        name: Issue comment
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                node-version: '14'
+    
+            - name: Install dependencies
+              run: npm install axios
+
+            - name: Commenting on the issue
+              id: comment
+              uses: actions/github-script@v4
+              with: 
+                  script: |
+                    const axios = require('axios');
+                    const commentBody = context.payload.comment.body;
+                    const prefix = 'TriagerX';
+                    if (commentBody.startsWith(prefix)) {
+                        const restCommentBody = commentBody.slice(prefix.length);
+                        if (restCommentBody.trim().startsWith('https')){
+                            const issueUrl = restCommentBody.trim();
+                            const issueNumber = issueUrl.split('/').pop();
+                            const issueOwner = issueUrl.split('/')[3];
+                            const issueRepo = issueUrl.split('/')[4];
+
+                            const { data: issueData } = await github.issues.get({
+                                issue_number: issueNumber,
+                                owner: issueOwner,
+                                repo: issueRepo
+                            });
+
+                            const jsonData = JSON.stringify(issueData);
+                            console.log("issueData: -> ", jsonData);
+
+                            const apiUrl = 'https://gentle-grass-3c76678a9e5b4c789f59671655de411f.azurewebsites.net/';
+                            
+                            const response = await axios.post(apiUrl, jsonData, {
+                              headers: {
+                                'Content-Type': 'application/json'
+                              }
+                            });
+                        
+                            let newCommentBody = 'Title: ' + response.data['title'] + '\n';
+                            newCommentBody += 'Body: ' + response.data['body'] + '\n' 
+                            newCommentBody += 'Prediction: ' + response.data['prediction'] + '\n';
+                            
+                            console.log('response:', response); // Debug log
+                            console.log('response.data:', response.data); // Debug log
+                            console.log('newCommentBody: ', newCommentBody)
+                            
+                            await github.issues.createComment({
+                              issue_number: context.issue.number,
+                              owner: context.repo.owner,
+                              repo: context.repo.repo,
+                              body: newCommentBody
+                            });
+                        } else{
+                            const newCommentBody = 'Hi' + restCommentBody;
+                            github.issues.createComment({
+                                issue_number: context.issue.number,
+                                owner: context.repo.owner,
+                                repo: context.repo.repo,
+                                body: newCommentBody
+                            });
+                        }
+                    }
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
