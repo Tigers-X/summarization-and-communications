@@ -82,7 +82,7 @@ jobs:
 
                           input = {
                             "issueData": issueData,
-                            "commentsData": commentsData,
+                            "commentsData": [],
                             "action": action,
                             "model": model,
                             "userComment": restCommentBody
