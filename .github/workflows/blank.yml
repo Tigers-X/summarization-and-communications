@@ -43,6 +43,11 @@ jobs:
                           restCommentBody = restCommentBody.replace('-gemini', '').trim();
                           model = 'gemini'
                         }
+
+                        if (action == '' or model == '') {
+                            console.log("Action or model is missing.");
+                            return;
+                        }
                         
                         // TriagerX /summarize -chatgpt https://github.com/eclipse-openj9/openj9/issues/19576
                         // TriagerX /interact -gemini How are you?
