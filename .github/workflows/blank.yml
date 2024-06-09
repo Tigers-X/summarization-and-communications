@@ -76,13 +76,7 @@ jobs:
                         }
 
                         input = {
-                            "issueData": {
-                                "title": "",
-                                "body": "",
-                                "state": "open",
-                                "assignees": [],
-                                "labels": []
-                            },
+                            "issueData": issueData,
                             "commentsData": [],
                             "model": model,
                             "action": action,
