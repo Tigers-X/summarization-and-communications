@@ -77,7 +77,7 @@ jobs:
                         }
 
                         //console.log("INPUT____", input)
-                        console.log("User Login:", commentsData[0].user.login);
+                        console.log("User Login:", input['commentsData'][0].user.login);
                         const response = await axios.post(apiUrl, JSON.stringify(input), {
                           headers: {
                             'Content-Type': 'application/json'
