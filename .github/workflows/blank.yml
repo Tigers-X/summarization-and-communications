@@ -22,7 +22,8 @@ jobs:
                     const axios = require('axios');
                     const commentBody = context.payload.comment.body;
                     const prefix = 'TriagerX';
-                    if (commentBody.startsWith(prefix)) {
+                    async function run() {
+                      if (commentBody.startsWith(prefix)) {
                         let restCommentBody = commentBody.replace(prefix, '').trim();
                         let action = ''
                         let model = ''
@@ -59,11 +60,6 @@ jobs:
                         let issueOwner = issueUrl.split('/')[3];
                         let issueRepo = issueUrl.split('/')[4];
 
-                        console.log(issueUrl);
-                        console.log(issueNumber);
-                        console.log(issueOwner);
-                        console.log(issueRepo);
-
                         const { data: issueData } = await github.issues.get({
                           issue_number: issueNumber,
                           owner: issueOwner,
@@ -79,31 +75,25 @@ jobs:
                           const { data: commentsData } = await github.request(commentsUrl);
                           input['commentsData'] = commentsData;
                           console.log("COMMENTSDATA:", commentsData)
-
-                          input = {
-                            "issueData": issueData,
-                            "commentsData": [],
-                            "action": action,
-                            "model": model,
-                            "userComment": restCommentBody
-                          }
-                            
-                          const response = await axios.post(apiUrl, JSON.stringify(input), {
-                            headers: {
-                              'Content-Type': 'application/json'
-                            }
-                          });
-                            
-                          let newCommentBody = response.data['response'];
-                          console.log('newCommentBody: ', newCommentBody)
-                            
-                          await github.issues.createComment({
-                            issue_number: context.issue.number,
-                            owner: context.repo.owner,
-                            repo: context.repo.repo,
-                            body: newCommentBody
-                          });
                         }
+
+                        const response = await axios.post(apiUrl, JSON.stringify(input), {
+                          headers: {
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                          
+                        let newCommentBody = response.data['response'];
+                        console.log('newCommentBody: ', newCommentBody)
+                          
+                        await github.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: newCommentBody
+                        });
+                      }
                     }
+                    run();
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
