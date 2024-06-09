@@ -79,20 +79,40 @@ jobs:
                           console.log("COMMENTSDATA:", commentsData)
                         }
 
-                        input['commentsData'] = [
-                            {
-                                "user": {
-                                    "login": "abc"
-                                },
-                                "body": "new text"
+                        input = {
+                            "issueData": {
+                                "title": "",
+                                "body": "",
+                                "state": "open",
+                                "assignees": [
+                                    {
+                                        "login": "abc"
+                                    }
+                                ],
+                                "labels": [
+                                    {
+                                        "name": ""
+                                    }
+                                ]
                             },
-                            {
-                                "user": {
-                                    "login": "cba"
+                            "commentsData": [
+                                {
+                                    "user": {
+                                        "login": "abc"
+                                    },
+                                    "body": "Hello this is sample text."
                                 },
-                                "body": "example text"
-                            }
-                        ]
+                                {
+                                    "user": {
+                                        "login": "bca"
+                                    },
+                                    "body": "test text"
+                                }
+                            ],
+                            "action": "interact",
+                            "model": "gemini",
+                            "userComment": "Hello how are you?"
+                        }
 
                         const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
                         const response = await axios.post(apiUrl, JSON.stringify(input), {
