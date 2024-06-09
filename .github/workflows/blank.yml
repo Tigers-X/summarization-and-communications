@@ -54,9 +54,9 @@ jobs:
                         // TriagerX /summarize -chatgpt https://github.com/eclipse-openj9/openj9/issues/19576
                         // TriagerX /interact -gemini How are you?
                         
-                        console.log(github.event)
+                        console.log(context)
                         
-                        let issueUrl = commentBody.includes('https') ? restCommentBody.trim() : github.event.issue.url;
+                        let issueUrl = commentBody.includes('https') ? restCommentBody.trim() : context.issue.url;
                         let issueNumber = issueUrl.split('/').pop();
                         let issueOwner = issueUrl.split('/')[3];
                         let issueRepo = issueUrl.split('/')[4];
