@@ -72,37 +72,38 @@ jobs:
 
                         input['issueData'] = issueData;
 
+                        const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
+
                         if (action == 'interact') {
                           const commentsUrl = issueData.comments_url;
                           const { data: commentsData } = await github.request(commentsUrl);
                           input['commentsData'] = commentsData;
                           console.log("COMMENTSDATA:", commentsData)
-                        }
 
-                        input = {
+                          input = {
                             "issueData": issueData,
                             "commentsData": commentsData,
-                            "action": "interact",
-                            "model": "gemini",
-                            "userComment": "Hello how are you?"
-                        }
-
-                        const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
-                        const response = await axios.post(apiUrl, JSON.stringify(input), {
-                          headers: {
-                            'Content-Type': 'application/json'
+                            "action": action,
+                            "model": model,
+                            "userComment": restCommentBody
                           }
-                        });
-                        
-                        let newCommentBody = response.data['response'];
-                        console.log('newCommentBody: ', newCommentBody)
-                        
-                        await github.issues.createComment({
-                          issue_number: context.issue.number,
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          body: newCommentBody
-                        });
+                            
+                          const response = await axios.post(apiUrl, JSON.stringify(input), {
+                            headers: {
+                              'Content-Type': 'application/json'
+                            }
+                          });
+                            
+                          let newCommentBody = response.data['response'];
+                          console.log('newCommentBody: ', newCommentBody)
+                            
+                          await github.issues.createComment({
+                            issue_number: context.issue.number,
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            body: newCommentBody
+                          });
+                        }
                     }
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
