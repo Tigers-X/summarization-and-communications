@@ -56,7 +56,7 @@ jobs:
                         
                         console.log(context)
                         
-                        let issueUrl = commentBody.includes('https') ? restCommentBody.trim() : context.issue.url;
+                        let issueUrl = commentBody.includes('https') ? restCommentBody.trim() : context.payload.issue.html_url;
                         let issueNumber = issueUrl.split('/').pop();
                         let issueOwner = issueUrl.split('/')[3];
                         let issueRepo = issueUrl.split('/')[4];
