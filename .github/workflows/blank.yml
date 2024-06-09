@@ -65,6 +65,8 @@ jobs:
                           repo: issueRepo
                         });
 
+                        console.log("ISSUEDATA:", issueData);
+                        
                         input['issueData'] = issueData;
 
                         if (action == 'interact') {
