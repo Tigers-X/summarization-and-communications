@@ -44,14 +44,6 @@ jobs:
                           model = 'gemini'
                         }
                         
-                        let input = {
-                          "issueData": {},
-                          "commentsData" : [],
-                          "model" : model,
-                          "action" : action,
-                          "userComment" : restCommentBody
-                        }
-
                         // TriagerX /summarize -chatgpt https://github.com/eclipse-openj9/openj9/issues/19576
                         // TriagerX /interact -gemini How are you?
                           
@@ -66,9 +58,13 @@ jobs:
                           repo: issueRepo
                         });
 
-                        input['issueData'] = issueData;
-
-                        const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
+                        let input = {
+                          "issueData": issueData,
+                          "commentsData" : [],
+                          "model" : model,
+                          "action" : action,
+                          "userComment" : restCommentBody
+                        }
 
                         if (action == 'interact') {
                           const commentsUrl = issueData.comments_url;
@@ -76,23 +72,7 @@ jobs:
                           input['commentsData'] = commentsData;
                         }
 
-                        console.log("INPUT____", input)
-                        
-                        input['commentsData'] = [
-                            {
-                                "user": {
-                                    "login": "abc"
-                                },
-                                "body": "Hello this is test"
-                            },
-                            {
-                                "user": {
-                                    "login": "bca"
-                                },
-                                "body": "text example"
-                            }
-                        ]
-                        
+                        const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
                         const response = await axios.post(apiUrl, JSON.stringify(input), {
                           headers: {
                             'Content-Type': 'application/json'
