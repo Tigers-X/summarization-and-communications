@@ -1,6 +1,8 @@
 name: summarization and interaction workflow
 run-name: Summarizer and Interactor in GitHub Actions 
-on: [issue_comment]
+on:
+  issues:
+    types: [opened]
 jobs:
     issue_commented:
         name: Issue comment
