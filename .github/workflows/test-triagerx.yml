@@ -30,7 +30,7 @@ jobs:
             }
 
             while (closed_issues_collected < 5) {
-              const issue_number = getRandomInt(2, 19658);
+              const issue_number = getRandomInt(19358, 19658);
               const { data } = await github.issues.get({
                 owner,
                 repo,
