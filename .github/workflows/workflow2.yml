@@ -29,7 +29,6 @@ jobs:
               "issue_description": issueDescription,
             }
 
-            /*
             const response = await axios.post('http://140.211.168.122/recommendation', JSON.stringify(input), {
               headers: {
                 'accept': 'application/json',
@@ -37,4 +36,3 @@ jobs:
               },
             });
             console.log(response.data);
-            */
