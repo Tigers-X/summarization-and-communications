@@ -1,0 +1,44 @@
+name: Testing Triager
+run-name: Triager Tester in GitHub Actions
+
+on:
+  issues:
+    types: [opened]
+
+jobs: 
+  triager_test:
+    name: Triager Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Collect 10 random closed issues from OpenJ9
+        uses: actions/github-script@v4
+        with:
+          script: |
+            let issues = [];
+            const owner = "eclipse-openj9";
+            const repo = "openj9";
+            closed_issues_collected = 0;
+
+            function getRandomInt(min, max) {
+              const minCeiled = Math.ceil(min);
+              const maxFloored = Math.floor(max);
+              return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+            }
+
+            while (closed_issues_collected < 10) {
+              const issue_number = getRandomInt(2, 19658);
+              const { data } = await github.issues.get({
+                owner,
+                repo,
+                issue_number
+              });
+
+              if (data.state === "closed") {
+                issues.push(data);
+                closed_issues_collected++;
+              }
+            }
+            console.log(issues);
