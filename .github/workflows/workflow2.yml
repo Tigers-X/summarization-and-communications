@@ -19,8 +19,8 @@ jobs:
         uses: actions/github-script@v4
         with:
           script: |
-            const issueTitle = github.event.issue.title;
-            const issueDescription = github.event.issue.body;
+            const issueTitle = context.payload.issue.title;
+            const issueDescription = context.payload.issue.body;
             const axios = require('axios');
             
             console.log("issue_title: ", issueTitle);
@@ -38,4 +38,5 @@ jobs:
                 'Content-Type': 'application/json',
               },
             });
+            console.log(response.data);
             */
