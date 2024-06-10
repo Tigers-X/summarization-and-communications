@@ -37,7 +37,7 @@ jobs:
                 issue_number
               });
 
-              if (data.state === "closed" && data.assignee != null && data.labels.length != 0) {
+              if (data.status != 400 && data.state === "closed" && data.assignee != null && data.labels.length != 0) {
                 issues.push(data);
                 closed_issues_collected++;
               }
