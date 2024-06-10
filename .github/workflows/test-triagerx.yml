@@ -36,9 +36,13 @@ jobs:
                 issue_number
               });
 
-              if (data.state === "closed") {
+              if (data.state === "closed" && data.assignee != null) {
                 issues.push(data);
                 closed_issues_collected++;
               }
             }
-            console.log(issues);
+            
+            for (let i = 0; i < issues.length; i++) {
+              let issue = issues[i];
+              console.log(issue["labels"]);
+            }
