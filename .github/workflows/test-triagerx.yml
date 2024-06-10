@@ -36,13 +36,44 @@ jobs:
                 issue_number
               });
 
-              if (data.state === "closed" && data.assignee != null) {
+              if (data.state === "closed" && data.assignee != null && data.labels.length != 0) {
                 issues.push(data);
                 closed_issues_collected++;
               }
             }
             
+            modelOutputs = [];
             for (let i = 0; i < issues.length; i++) {
               let issue = issues[i];
-              console.log(issue["labels"]);
+              let input = {
+                "issue_title": issue["title"],
+                "issue_description": issue["body"],
+              }
+
+              const response = await axios.post('http://140.211.168.122/recommendation', JSON.stringify(input), {
+                headers: {
+                  'accept': 'application/json',
+                  'Content-Type': 'application/json',
+                },
+              });
+              
+              modelOutputs.push(response.data);
             }
+
+            resultString = '';
+            for (let i = 0; i < issues.length; i++) {
+              actualLabels = issues[i]["labels"].map(label => label["name"]);
+              actualAssignees = issues[i]["assignees"].map(assignee => assignee["login"]);
+              predictedLabels = modelOutputs[i].recommended_components;
+              predictedAssignees = modelOutputs[i].recommended_developers;
+              
+              resultString += `Actual Components: ${actualLabels.join(', ')}\Recommended Components: ${predictedLabels.join(', ')}\n`;
+              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n\n`;
+            }
+
+            await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: resultString
+            });
