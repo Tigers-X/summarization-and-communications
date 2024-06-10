@@ -25,32 +25,26 @@ jobs:
                     async function run() {
                       if (commentBody.startsWith(prefix)) {
                         let restCommentBody = commentBody.replace(prefix, '').trim();
-                        let action = ''
-                        let model = ''
+                        let actions = ['recommend', 'summarize', 'interact'];
+                        let models = ['triagerx', 'chatgpt', 'gemini'];
+                        let action = null;
+                        let model = null;
 
-                        if (commentBody.includes('/recommend')){
-                          restCommentBody = restCommentBody.replace('/recommend', '').trim();
-                          action = 'recommend'
-                        } else if (commentBody.includes('/summarize')){
-                          restCommentBody = restCommentBody.replace('/summarize', '').trim();
-                          action = 'summarize'
-                        } else if (commentBody.includes('/interact')){
-                          restCommentBody = restCommentBody.replace('/interact', '').trim();
-                          action = 'interact'
-                        }
+                        actions.forEach(keyword => {
+                          if (!action && restCommentBody.includes(`/${keyword}`)) {
+                            restCommentBody = restCommentBody.replace(`/${keyword}`, '').trim();
+                            action = keyword;
+                          }
+                        });
 
-                        if (commentBody.includes('-triagerx')){
-                          restCommentBody = restCommentBody.replace('-triagerx', '').trim();
-                          model = 'triagerx'
-                        } else if (commentBody.includes('-chatgpt')){
-                          restCommentBody = restCommentBody.replace('-chatgpt', '').trim();
-                          model = 'chatgpt'
-                        } else if (commentBody.includes('-gemini')){
-                          restCommentBody = restCommentBody.replace('-gemini', '').trim();
-                          model = 'gemini'
-                        }
+                        models.forEach(keyword => {
+                          if (!model && restCommentBody.includes(`-${keyword}`)) {
+                            restCommentBody = restCommentBody.replace(`-${keyword}`, '').trim();
+                            model = keyword;
+                          }
+                        });
 
-                        if (action == '' || model == '') {
+                        if (action == null || model == null) {
                             console.log("Action or model is missing.");
                             return;
                         }
