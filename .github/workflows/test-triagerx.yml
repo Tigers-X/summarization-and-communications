@@ -13,7 +13,7 @@ jobs:
       - name: Install dependencies
         run: npm install axios
 
-      - name: Collect 10 random closed issues from OpenJ9
+      - name: Collect 5 random closed issues from OpenJ9
         uses: actions/github-script@v4
         with:
           script: |
