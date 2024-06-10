@@ -67,15 +67,16 @@ jobs:
               actualAssignees = issues[i]["assignees"].map(assignee => assignee["login"]);
               predictedLabels = modelOutputs[i].recommended_components;
               predictedAssignees = modelOutputs[i].recommended_developers;
-              resultString += `**Issue Link:** ${issues[i].html_url}\n**Title:** ${issues[i].title}\n`;
-              resultString += `**Actual Components:** ${actualLabels.join(', ')}\n**Recommended Components:** ${predictedLabels.join(', ')}\n`;
-              resultString += `**Actual Assignees:** ${actualAssignees.join(', ')}\n**Recommended Assignees:** ${predictedAssignees.join(', ')}\n`;
+              
+              resultString += `Issue Link: ${issues[i].html_url}\nTitle: ${issues[i].title}\n`;
+              resultString += `Actual Components: ${actualLabels.join(', ')}\nRecommended Components: ${predictedLabels.join(', ')}\n`;
+              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n`;
               resultString += '---\n';
-
-              await github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: resultString
-              });
             }
+
+            await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: resultString
+            });
