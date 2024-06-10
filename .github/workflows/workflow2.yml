@@ -35,4 +35,15 @@ jobs:
                 'Content-Type': 'application/json',
               },
             });
+            
             console.log(response.data);
+            const recommendedComponents = response.data.recommended_components;
+            const recommendedDevelopers = response.data.recommended_developers;
+            const resultString = `Recommended Components: ${recommendedComponents.join(', ')}\nRecommended Developers: ${recommendedDevelopers.join(', ')}`;
+
+            await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: resultString
+            });
