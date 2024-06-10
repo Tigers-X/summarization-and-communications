@@ -1,5 +1,5 @@
-name: sum+inter workflow
-run-name: Summarizer and Interactor in GitHub Actions 🚀
+name: summarization and interaction workflow
+run-name: Summarizer and Interactor in GitHub Actions 
 on: [issue_comment]
 jobs:
     issue_commented:
