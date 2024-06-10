@@ -31,15 +31,23 @@ jobs:
 
             while (closed_issues_collected < 5) {
               const issue_number = getRandomInt(19358, 19658);
-              const { data } = await github.issues.get({
-                owner,
-                repo,
-                issue_number
-              });
+              try {
+                const { data } = await github.issues.get({
+                  owner,
+                  repo,
+                  issue_number
+                });
 
-              if (data.status != 404 && data.state === "closed" && data.assignee != null && data.labels.length != 0) {
-                issues.push(data);
-                closed_issues_collected++;
+                if (data.status != 404 && data.state === "closed" && data.assignee != null && data.labels.length != 0) {
+                  issues.push(data);
+                  closed_issues_collected++;
+                }
+              } catch (error) {
+                if (error.response && error.response.status == 404) {
+                  console.log(`Issue #${issue_number} not found.`);
+                } else {
+                  console.error(`An error occurred while getting issue #${issue_number}: ${error}`);
+                }
               }
             }
             
