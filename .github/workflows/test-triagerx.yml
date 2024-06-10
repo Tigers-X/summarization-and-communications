@@ -70,8 +70,7 @@ jobs:
               
               resultString += `Issue Link: ${issues[i].html_url}\nTitle: ${issues[i].title}\n`;
               resultString += `Actual Components: ${actualLabels.join(', ')}\nRecommended Components: ${predictedLabels.join(', ')}\n`;
-              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n`;
-              resultString += '---\n';
+              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n\n`;
             }
 
             await github.issues.createComment({
