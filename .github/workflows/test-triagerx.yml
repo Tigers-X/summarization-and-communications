@@ -55,8 +55,8 @@ jobs:
             for (let i = 0; i < issues.length; i++) {
               let issue = issues[i];
               let input = {
-                "issue_title": issue["title"],
-                "issue_description": issue["body"],
+                "issue_title": issue["title"] != null ? issue["title"] : "",
+                "issue_description": issue["body"] != null ? issue["body"] : ""
               }
 
               const response = await axios.post('http://140.211.168.122/recommendation', JSON.stringify(input), {
