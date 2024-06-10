@@ -29,7 +29,7 @@ jobs:
               return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
             }
 
-            while (closed_issues_collected < 10) {
+            while (closed_issues_collected < 5) {
               const issue_number = getRandomInt(2, 19658);
               const { data } = await github.issues.get({
                 owner,
@@ -68,8 +68,10 @@ jobs:
               predictedLabels = modelOutputs[i].recommended_components;
               predictedAssignees = modelOutputs[i].recommended_developers;
               
-              resultString += `Actual Components: ${actualLabels.join(', ')}\Recommended Components: ${predictedLabels.join(', ')}\n`;
-              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n\n`;
+              resultString += `**Issue Link:** ${issues[i].html_url}\n**Title:** ${issues[i].title}\n`;
+              resultString += `**Actual Components:** ${actualLabels.join(', ')}\n**Recommended Components:** ${predictedLabels.join(', ')}\n`;
+              resultString += `**Actual Assignees:** ${actualAssignees.join(', ')}\n**Recommended Assignees:** ${predictedAssignees.join(', ')}\n`;
+              resultString += '---\n';
             }
 
             await github.issues.createComment({
