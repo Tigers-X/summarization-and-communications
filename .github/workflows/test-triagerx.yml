@@ -17,6 +17,7 @@ jobs:
         uses: actions/github-script@v4
         with:
           script: |
+            const axios = require('axios');
             let issues = [];
             const owner = "eclipse-openj9";
             const repo = "openj9";
