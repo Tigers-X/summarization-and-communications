@@ -1,8 +1,6 @@
 name: TriagerX Issue Trigger
 
-on:
-  issues:
-    types: [opened]
+on: [issue_comment]
 
 jobs:
   handle-issue:
