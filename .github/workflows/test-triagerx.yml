@@ -72,9 +72,10 @@ jobs:
               resultString += `**Actual Assignees:** ${actualAssignees.join(', ')}\n**Recommended Assignees:** ${predictedAssignees.join(', ')}\n`;
               resultString += '---\n';
 
-            await github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: resultString
-            });
+              await github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: resultString
+              });
+            }
