@@ -1,1 +1,41 @@
+name: TriagerX Issue Trigger
 
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  handle-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install axios
+        
+      - name: Trigger TriagerX
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const issueTitle = github.event.issue.title;
+            const issueDescription = github.event.issue.body;
+            const axios = require('axios');
+            
+            console.log("issue_title: ", issueTitle);
+            console.log("issue_description: ", issueDescription);
+            
+            let input = {
+              "issue_title": issueTitle,
+              "issue_description": issueDescription,
+            }
+
+            /*
+            const response = await axios.post('http://140.211.168.122/recommendation', JSON.stringify(input), {
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+            });
+            */
