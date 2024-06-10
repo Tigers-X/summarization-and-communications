@@ -68,10 +68,15 @@ jobs:
               predictedLabels = modelOutputs[i].recommended_components;
               predictedAssignees = modelOutputs[i].recommended_developers;
               
+<<<<<<< HEAD
               resultString += `**Issue Link:** ${issues[i].html_url}\n**Title:** ${issues[i].title}\n`;
               resultString += `**Actual Components:** ${actualLabels.join(', ')}\n**Recommended Components:** ${predictedLabels.join(', ')}\n`;
               resultString += `**Actual Assignees:** ${actualAssignees.join(', ')}\n**Recommended Assignees:** ${predictedAssignees.join(', ')}\n`;
               resultString += '---\n';
+=======
+              resultString += `Actual Components: ${actualLabels.join(', ')}\nRecommended Components: ${predictedLabels.join(', ')}\n`;
+              resultString += `Actual Assignees: ${actualAssignees.join(', ')}\nRecommended Assignees: ${predictedAssignees.join(', ')}\n\n`;
+>>>>>>> c35dc30fbc4ccb4b265327af4f67d2abe40547bf
             }
 
             await github.issues.createComment({
