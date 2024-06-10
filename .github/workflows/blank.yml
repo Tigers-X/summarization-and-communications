@@ -44,7 +44,7 @@ jobs:
                           model = 'gemini'
                         }
 
-                        if (action == '' or model == '') {
+                        if (action == '' || model == '') {
                             console.log("Action or model is missing.");
                             return;
                         }
