@@ -77,7 +77,7 @@ jobs:
                           input['commentsData'] = commentsData;
                         }
 
-                        const apiUrl = 'https://jolly-rock-6ec1c558f46f43d1b565a4283867da28.azurewebsites.net/process';
+                        const apiUrl = 'https://tigersdemo.azurewebsites.net/process';
                         const response = await axios.post(apiUrl, JSON.stringify(input), {
                           headers: {
                             'Content-Type': 'application/json'
